@@ -1,0 +1,19 @@
+{
+  "name": "blender-elements",
+  "version": "0.0.1",
+  "description": "Bringing the UI controls from Blender to the web",
+  "main": "dist/blender-elements.min.js",
+  "scripts": {
+    "dev": "webpack-dev-server"
+  },
+  "author": "Bob Fanger <bfanger@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "awesome-typescript-loader": "^1.1.1",
+    "typescript": "^1.8.10",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-beta.12"
+  }
+}

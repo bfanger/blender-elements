@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<title>Blender Elements</title>
+
+
+<script src="/dist/blender-elements.js"></script>
+
+<body>
+    <b-number value="10"></b-number>
+
+    <script>
+        var number = document.querySelector('b-number')
+        console.dir(number)
+        number.value$.subscribe(v => console.log('n', v))
+
+        number.setAttribute('value', 123)
+        setTimeout(() => {
+            number.setAttribute('value', 456)
+        }, 300)
+    </script>
+</body>
