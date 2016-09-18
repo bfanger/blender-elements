@@ -10,6 +10,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "awesome-typescript-loader": "^1.1.1",
+    "raw-loader": "^0.5.1",
     "typescript": "^1.8.10",
     "webpack": "^1.13.2"
   },

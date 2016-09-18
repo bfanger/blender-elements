@@ -13,10 +13,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.ts$/,
-                loader: 'awesome-typescript',
-                exclude: [
-                    "node_modules"
-                ]
+                loader: 'awesome-typescript'
+            },
+            {
+                test: /\.css$/,
+                loader: 'raw'
             }
         ]
     }
