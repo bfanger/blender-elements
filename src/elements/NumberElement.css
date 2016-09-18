@@ -11,36 +11,41 @@
     box-shadow: 0 1px 1px #878787;
     height: 1.5em;
     line-height: 1.5em;
+    overflow: hidden;
+    cursor: default;
     -webkit-user-select: none;
 }
 :host(:hover) {
     background: #b7b7b7;
 }
 :host label,
-:host input {
+:host input,
+:host b-value {
     font: 1em sans-serif;
     -webkit-font-smoothing: antialiased;
     line-height: 1.5em;
 }
-:host input {
-    background: none;
-    border: none;
-    text-align: right;
-    flex: 1;
-    cursor: default;
+:host label {
+    min-width: 0;
+    overflow: hidden;
 }
-:host input:focus {
+:host b-value {
+    flex-grow: 1;
+    text-align: right;
+}
+:host input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
     outline: none;
     text-align: left;
     padding: 0 0.75em;
     background: linear-gradient(to bottom, #848484, #989898);
-    position: absolute;
+    color: #fff;
     border-radius: 0.75em;
-    left: 0;
     width: calc(100% - 1.5em);
     height: 1.5em;
-    z-index: 1;
-    cursor: text;
 }
 :host input::selection {
     background: #5a5a5a;

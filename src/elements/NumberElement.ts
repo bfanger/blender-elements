@@ -1,6 +1,7 @@
 import {Observable, BehaviorSubject, Subject, Subscription} from "@reactivex/rxjs"
 import buildElement from "../buildElement"
 import formatValue from "../helpers/formatNumber"
+import click from "../helpers/click"
 const style = require("./NumberElement.css")
 /**
  * <b-number value="123" step="1" fractiondigits="3">
@@ -18,11 +19,15 @@ class NumberElement {
     fractionDigits$: BehaviorSubject<number>
     label$: BehaviorSubject<string>
     shadowRoot: HTMLElement
+    previousValue: number
+    dom: {
+        label: HTMLInputElement
+        value: HTMLInputElement
+        increment: HTMLInputElement
+        decrement: HTMLInputElement
+        input: HTMLInputElement
+    }
     subscriptions: Subscription[]
-    input: HTMLInputElement
-    label: HTMLInputElement
-    increment: HTMLInputElement
-    decrement: HTMLInputElement
     
     constructor(element) {
         this.shadowRoot = element['attachShadow']({ mode: 'open' })
@@ -35,35 +40,49 @@ class NumberElement {
         element.value$ = this.value$.distinctUntilChanged() 
     }
     attach() {
-        this.subscribeTo(Observable.fromEvent(this.input, 'input', e => e.target.value), value => {
-            this.setValue(value)
+        //onFocus / input
+        this.subscribeTo(Observable.fromEvent(this.dom.input, 'focus'), () => {
+            this.previousValue = this.value$.value
+            this.dom.input.value = formatValue(this.value$.value, this.fractionDigits$.value).replace(/(\.[0-9])[0]+$/, '$1')
+            this.dom.input.select()
+            this.dom.input.style.zIndex = '1';
         })
-        this.subscribeTo(Observable.fromEvent(this.input, 'blur'), () => {
-            this.input.value = formatValue(this.value$.value, this.fractionDigits$.value)
+        //onBlur
+        this.subscribeTo(Observable.fromEvent(this.dom.input, 'blur'), () => {
+            this.dom.value.innerText = formatValue(this.value$.value, this.fractionDigits$.value)
+            this.dom.input.style.zIndex = '-1';
         })
-        this.subscribeTo(Observable.fromEvent(this.input, 'focus'), () => {
-            this.input.select()
+        // this.subscribeTo(Observable.fromEvent(this.dom.input, 'input', e => e.target.value), value => {
+        //     this.setValue(value)
+        // })
+        // onEnter
+        this.subscribeTo(Observable.fromEvent(this.dom.input, 'keydown').filter(e => e['keyCode'] === 13), () => {
+            this.dom.input.blur()
         })
-        this.subscribeTo(Observable.fromEvent(this.input, 'keydown').filter(e => e['keyCode'] === 13), () => {
-            this.input.blur()
+        // onEsc
+        this.subscribeTo(Observable.fromEvent(this.dom.input, 'keydown').filter(e => e['keyCode'] === 27), () => {
+            this.dom.input.blur()
+            this.setValue(this.previousValue)
         })
-        this.subscribeTo(Observable.fromEvent(this.increment, 'click'), e => {
-            e.preventDefault()
-            this.setValue(this.value$.value + this.step$.value)
-        })
-        this.subscribeTo(Observable.fromEvent(this.decrement, 'click'), e => {
-            e.preventDefault()
-            this.setValue(this.value$.value - this.step$.value)
+        this.subscribeTo(click(this.shadowRoot), e => {
+            if (e.target === this.dom.increment) {
+                this.setValue(this.value$.value + this.step$.value)
+            } else if (e.target === this.dom.decrement) {
+                this.setValue(this.value$.value + this.step$.value)
+            } else {
+                this.dom.input.focus()
+            }
         })
         this.subscribeTo(this.value$.distinctUntilChanged().combineLatest(this.fractionDigits$.distinctUntilChanged()), ([value, decimals]) => {
-            if (parseFloat(this.input.value) !== value) {
-                this.input.value = formatValue(value, decimals)
+            if (parseFloat(this.dom.input.value) !== value) {
+                this.dom.value.innerText = formatValue(value, decimals)
             }
         })
         this.subscribeTo(this.label$.distinctUntilChanged(), label => {
-            this.label.innerText = label
-            if (label != '') {
-                this.label.innerText += ':'
+            if (label == '') {
+                this.dom.label.innerText = ''
+            } else {
+                this.dom.label.innerText = label + ':'
             }
         })
     }
@@ -81,13 +100,18 @@ class NumberElement {
         <style>${style}</style>
         <b-arrow-left></b-arrow-left>
         <label for="input"></label>
-        <input id="input">
+        <b-value></b-value>
         <b-arrow-right></b-arrow-right>
+        <input id="input">
         `
-        this.input = <HTMLInputElement> this.shadowRoot.querySelector('input')
-        this.label = <HTMLInputElement> this.shadowRoot.querySelector('label')
-        this.decrement = <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-left')
-        this.increment = <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-right')
+        this.dom = {
+            input: <HTMLInputElement> this.shadowRoot.querySelector('input'),
+            label: <HTMLInputElement> this.shadowRoot.querySelector('label'),
+            value: <HTMLInputElement> this.shadowRoot.querySelector('b-value'),
+            decrement: <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-left'),
+            increment: <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-right')
+        }
+        this.dom.input.style.zIndex = '-1';
     }
     
     setValue(value) {
