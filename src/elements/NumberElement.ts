@@ -1,12 +1,22 @@
 import {Observable, BehaviorSubject, Subject, Subscription} from "@reactivex/rxjs"
 import buildElement from "../buildElement"
+import formatValue from "../helpers/formatNumber"
 const style = require("./NumberElement.css")
-
+/**
+ * <b-number value="123" step="1" fractiondigits="3">
+ * 
+ * Attributes:
+ *   value: Number defaults to 0
+ *   label: String
+ *   step: Determine the increment/decrement value. Defaults to 1
+ *   fractiondigits: Number of digits after the decimal point.
+ */
 class NumberElement {
 
     value$: BehaviorSubject<number>
     step$: BehaviorSubject<number>
-    decimals$: BehaviorSubject<number>
+    fractionDigits$: BehaviorSubject<number>
+    label$: BehaviorSubject<string>
     shadowRoot: HTMLElement
     subscriptions: Subscription[]
     input: HTMLInputElement
@@ -17,22 +27,19 @@ class NumberElement {
     constructor(element) {
         this.shadowRoot = element['attachShadow']({ mode: 'open' })
         this.subscriptions = []
-        this.html()
+        this.initialRender()
         this.value$ = new BehaviorSubject(0)
         this.step$ = new BehaviorSubject(1)
-        this.decimals$ = new BehaviorSubject(null)
+        this.fractionDigits$ = new BehaviorSubject(null)
+        this.label$ = new BehaviorSubject('')
         element.value$ = this.value$.distinctUntilChanged() 
-        this.update = this.update.bind(this)
     }
     attach() {
         this.subscribeTo(Observable.fromEvent(this.input, 'input', e => e.target.value), value => {
-            value = this.toNumber(value)
-            if (isNaN(value) === false) {
-                this.value$.next(value)
-            }
+            this.setValue(value)
         })
         this.subscribeTo(Observable.fromEvent(this.input, 'blur'), () => {
-            this.input.value = this.formatValue(this.value$.value, this.decimals$.value)
+            this.input.value = formatValue(this.value$.value, this.fractionDigits$.value)
         })
         this.subscribeTo(Observable.fromEvent(this.input, 'focus'), () => {
             this.input.select()
@@ -42,13 +49,23 @@ class NumberElement {
         })
         this.subscribeTo(Observable.fromEvent(this.increment, 'click'), e => {
             e.preventDefault()
-            this.value$.next(this.value$.value + this.step$.value)
+            this.setValue(this.value$.value + this.step$.value)
         })
         this.subscribeTo(Observable.fromEvent(this.decrement, 'click'), e => {
             e.preventDefault()
-            this.value$.next(this.value$.value - this.step$.value)
+            this.setValue(this.value$.value - this.step$.value)
         })
-        this.subscribeTo(this.value$.distinctUntilChanged().combineLatest(this.decimals$.distinctUntilChanged()), this.update)
+        this.subscribeTo(this.value$.distinctUntilChanged().combineLatest(this.fractionDigits$.distinctUntilChanged()), ([value, decimals]) => {
+            if (parseFloat(this.input.value) !== value) {
+                this.input.value = formatValue(value, decimals)
+            }
+        })
+        this.subscribeTo(this.label$.distinctUntilChanged(), label => {
+            this.label.innerText = label
+            if (label != '') {
+                this.label.innerText += ':'
+            }
+        })
     }
     detach() {
         this.subscriptions.forEach(subscription => subscription.unsubscribe())
@@ -59,11 +76,11 @@ class NumberElement {
         this.subscriptions.push(subscription)
         return subscription
     }
-    html() {
+    initialRender() {
         this.shadowRoot.innerHTML = `
         <style>${style}</style>
         <b-arrow-left></b-arrow-left>
-        <label for="input">Frame Step:</label>
+        <label for="input"></label>
         <input id="input">
         <b-arrow-right></b-arrow-right>
         `
@@ -72,23 +89,17 @@ class NumberElement {
         this.decrement = <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-left')
         this.increment = <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-right')
     }
-    toNumber(value) {
-        if (typeof value === 'number') {
-            return value
+    
+    setValue(value) {
+        value = parseFloat(value)
+        if (isNaN(value)) {
+            return;
         }
-        return parseFloat(value)
-    }
-    update([value, decimals]) {
-        if (this.toNumber(this.input.value) !== value) {
-            this.input.value = this.formatValue(value, decimals)
+        if (this.fractionDigits$.value !== null) {
+            const factor = Math.pow(10, this.fractionDigits$.value)
+            value = Math.round(value * factor) / factor;
         }
-    }
-    formatValue(value, decimals) {
-        if (decimals === null) {
-            return value
-        } else {
-            return value.toFixed(decimals)
-        }
+        this.value$.next(value)
     }
 }
 
@@ -98,10 +109,15 @@ export default buildElement('b-number', NumberElement, {
             return this.value$.value
         },
         set(value) {
-            value = this.toNumber(value)
-            if (isNaN(value) === false) {
-                this.value$.next(value)
-            }
+            this.setValue(value)
+        }
+    },
+    label: {
+        get() {
+            return this.label$.value
+        },
+        set(value) {
+            this.label$.next(value)
         }
     },
     step: {
@@ -109,20 +125,19 @@ export default buildElement('b-number', NumberElement, {
             return this.step$.value
         },
         set(value) {
-            console.log(value)
             value = parseFloat(value) || 1
-            value = value < 0 ? 1 : value
             this.step$.next(value)
         }
     },
-    decimals: {
+    fractiondigits: {
         get() {
             return this.decimals$.value
         },
         set(value) {
             value = parseInt(value, 10) || 0
             value = value < 0 ? null : value
-            this.decimals$.next(value)
+            this.fractionDigits$.next(value)
+            this.setValue(this.value$.value) // Update the value to match the rounding
         }
     }
 }) 

@@ -4,7 +4,8 @@
   "description": "Bringing the UI controls from Blender to the web",
   "main": "dist/blender-elements.min.js",
   "scripts": {
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "start": "npm run dev"
   },
   "author": "Bob Fanger <bfanger@gmail.com>",
   "license": "GPL-3.0",
