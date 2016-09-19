@@ -1,11 +1,10 @@
-import {Observable} from "@reactivex/rxjs"
+import {Observable} from "rxjs/Observable"
 
 /**
- * 
+ * A click event (that is canceled when you move the mouse)
  */
 function click(element: HTMLElement): Observable<any> {
-    // @todo improve touch support?
-    return Observable.fromEvent(element, 'mousedown').flatMap(start => {
+    return Observable.fromEvent(element, 'mousedown').switchMap(start => {
         return Observable.fromEvent(element, 'mouseup').first().takeUntil(Observable.fromEvent(element, 'mousemove'))
     })
 }

@@ -1,7 +1,15 @@
-
 :host {
-    display: flex;
     position: relative;
+    display: block;
+    height: calc(1.5em + 2px);
+}
+:host b-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5em;
+    display: flex;
     border: 1px solid #191919;
     border-radius: .75em;
     background: linear-gradient(to top, #b4b4b4, #a0a0a0);
@@ -9,14 +17,17 @@
     padding: 0;
     white-space: nowrap;
     box-shadow: 0 1px 1px #878787;
-    height: 1.5em;
     line-height: 1.5em;
     overflow: hidden;
     cursor: default;
     -webkit-user-select: none;
 }
-:host(:hover) {
+:host b-container:hover {
     background: #b7b7b7;
+}
+:host b-container.dragging {
+    background: linear-gradient(to bottom, #848484, #989898);
+    color: #fff;
 }
 :host label,
 :host input,
@@ -37,15 +48,16 @@
     position: absolute;
     top: 0;
     left: 0;
-    border: none;
+    width: calc(100% - 1.5em);
+    height: 1.5em;
+    border: 1px solid #191919;
+    border-radius: .75em;
     outline: none;
     text-align: left;
     padding: 0 0.75em;
     background: linear-gradient(to bottom, #848484, #989898);
     color: #fff;
     border-radius: 0.75em;
-    width: calc(100% - 1.5em);
-    height: 1.5em;
 }
 :host input::selection {
     background: #5a5a5a;

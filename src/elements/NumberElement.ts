@@ -1,7 +1,12 @@
-import {Observable, BehaviorSubject, Subject, Subscription} from "@reactivex/rxjs"
+import {Observable} from "rxjs/Observable"
+import {Subject} from "rxjs/Subject"
+import {BehaviorSubject} from "rxjs/BehaviorSubject"
+import {Subscription} from "rxjs/Subscription"
+
 import buildElement from "../buildElement"
 import formatValue from "../helpers/formatNumber"
 import click from "../helpers/click"
+import drag from "../helpers/drag"
 const style = require("./NumberElement.css")
 /**
  * <b-number value="123" step="1" fractiondigits="3">
@@ -21,10 +26,11 @@ class NumberElement {
     shadowRoot: HTMLElement
     previousValue: number
     dom: {
-        label: HTMLInputElement
-        value: HTMLInputElement
-        increment: HTMLInputElement
-        decrement: HTMLInputElement
+        container: HTMLElement,
+        label: HTMLLabelElement
+        value: HTMLElement
+        increment: HTMLElement
+        decrement: HTMLElement
         input: HTMLInputElement
     }
     subscriptions: Subscription[]
@@ -64,6 +70,7 @@ class NumberElement {
             this.dom.input.blur()
             this.setValue(this.previousValue)
         })
+        // onClick
         this.subscribeTo(click(this.shadowRoot), e => {
             if (e.target === this.dom.increment) {
                 this.setValue(this.value$.value + this.step$.value)
@@ -72,6 +79,23 @@ class NumberElement {
             } else {
                 this.dom.input.focus()
             }
+        })
+        // onDrag
+        this.subscribeTo(drag([this.dom.decrement, this.dom.label, this.dom.value, this.dom.increment]).switchMap(down => {
+            this.previousValue = this.value$.value
+            return down['move$'].map(move => {
+                this.dom.container.classList.add('dragging')
+                const moved = Math.round((move.clientX - down.clientX) /  3)
+                return (move.shiftKey ? moved / 10 : moved)
+            })
+            .takeUntil(Observable.fromEvent(window, 'keydown').filter(e => e['keyCode'] === 27).do(() => {
+                this.setValue(this.previousValue)
+                this.dom.container.classList.remove('dragging')
+            })).do(null, null, _ => {
+                this.dom.container.classList.remove('dragging')
+            })
+        }), offset => {
+            this.setValue(this.previousValue + (offset * this.step$.value))
         })
         this.subscribeTo(this.value$.distinctUntilChanged().combineLatest(this.fractionDigits$.distinctUntilChanged()), ([value, decimals]) => {
             if (parseFloat(this.dom.input.value) !== value) {
@@ -98,18 +122,21 @@ class NumberElement {
     initialRender() {
         this.shadowRoot.innerHTML = `
         <style>${style}</style>
-        <b-arrow-left></b-arrow-left>
-        <label for="input"></label>
-        <b-value></b-value>
-        <b-arrow-right></b-arrow-right>
+        <b-container>
+            <b-arrow-left></b-arrow-left>
+            <label for="input"></label>
+            <b-value></b-value>
+            <b-arrow-right></b-arrow-right>
+        </b-container>
         <input id="input">
         `
         this.dom = {
+            container: <HTMLElement> this.shadowRoot.querySelector('b-container'),
             input: <HTMLInputElement> this.shadowRoot.querySelector('input'),
-            label: <HTMLInputElement> this.shadowRoot.querySelector('label'),
-            value: <HTMLInputElement> this.shadowRoot.querySelector('b-value'),
-            decrement: <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-left'),
-            increment: <HTMLInputElement> this.shadowRoot.querySelector('b-arrow-right')
+            label: <HTMLLabelElement> this.shadowRoot.querySelector('label'),
+            value: <HTMLElement> this.shadowRoot.querySelector('b-value'),
+            decrement: <HTMLElement> this.shadowRoot.querySelector('b-arrow-left'),
+            increment: <HTMLElement> this.shadowRoot.querySelector('b-arrow-right')
         }
         this.dom.input.style.zIndex = '-1';
     }
