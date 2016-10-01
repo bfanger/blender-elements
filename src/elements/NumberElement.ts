@@ -10,7 +10,7 @@ import drag from "../helpers/drag"
 const style = require("./NumberElement.css")
 /**
  * <b-number value="123" step="1" fractiondigits="3">
- * 
+ *
  * Attributes:
  *   value: Number defaults to 0
  *   label: String
@@ -34,16 +34,21 @@ class NumberElement {
         input: HTMLInputElement
     }
     subscriptions: Subscription[]
-    
+
     constructor(element) {
-        this.shadowRoot = element['attachShadow']({ mode: 'open' })
+        if (typeof element.attachShadow === 'function') {
+            this.shadowRoot = element.attachShadow({ mode: 'closed' });
+        } else {
+            this.shadowRoot = element['createShadowRoot']()
+
+        }
         this.subscriptions = []
         this.initialRender()
         this.value$ = new BehaviorSubject(0)
         this.step$ = new BehaviorSubject(1)
         this.fractionDigits$ = new BehaviorSubject(null)
         this.label$ = new BehaviorSubject('')
-        element.value$ = this.value$.distinctUntilChanged() 
+        element.value$ = this.value$.distinctUntilChanged()
     }
     attach() {
         //onFocus / input
@@ -62,11 +67,11 @@ class NumberElement {
         //     this.setValue(value)
         // })
         // onEnter
-        this.subscribeTo(Observable.fromEvent(this.dom.input, 'keydown').filter(e => e['keyCode'] === 13), () => {
+        this.subscribeTo(Observable.fromEvent<KeyboardEvent>(this.dom.input, 'keydown').filter(e => e.keyCode === 13), () => {
             this.dom.input.blur()
         })
         // onEsc
-        this.subscribeTo(Observable.fromEvent(this.dom.input, 'keydown').filter(e => e['keyCode'] === 27), () => {
+        this.subscribeTo(Observable.fromEvent<KeyboardEvent>(this.dom.input, 'keydown').filter(e => e.keyCode === 27), () => {
             this.dom.input.blur()
             this.setValue(this.previousValue)
         })
@@ -83,12 +88,12 @@ class NumberElement {
         // onDrag
         this.subscribeTo(drag([this.dom.decrement, this.dom.label, this.dom.value, this.dom.increment]).switchMap(down => {
             this.previousValue = this.value$.value
-            return down['move$'].map(move => {
+            return down.move$.map(move => {
                 this.dom.container.classList.add('dragging')
                 const moved = Math.round((move.clientX - down.clientX) /  3)
                 return (move.shiftKey ? moved / 10 : moved)
             })
-            .takeUntil(Observable.fromEvent(window, 'keydown').filter(e => e['keyCode'] === 27).do(() => {
+            .takeUntil(Observable.fromEvent<KeyboardEvent>(window, 'keydown').filter(e => e.keyCode === 27).do(() => {
                 this.setValue(this.previousValue)
                 this.dom.container.classList.remove('dragging')
             })).do(null, null, _ => {
@@ -140,7 +145,7 @@ class NumberElement {
         }
         this.dom.input.style.zIndex = '-1';
     }
-    
+
     setValue(value) {
         value = parseFloat(value)
         if (isNaN(value)) {
@@ -191,4 +196,4 @@ export default buildElement('b-number', NumberElement, {
             this.setValue(this.value$.value) // Update the value to match the rounding
         }
     }
-}) 
+})

@@ -1,3 +1,5 @@
+///<reference path="./types.d.ts"/>
+
 import NumberElement from "./elements/NumberElement"
 import "rxjs/add/observable/fromEvent"
 import "rxjs/add/observable/merge"

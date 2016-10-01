@@ -1,6 +1,6 @@
 const controller = Symbol('controller');
 
-function buildElement(tag, Element, properties) {
+function buildElement(tag:string, Element, properties:Object) {
     const keys = Object.keys(properties)
 
     class CustomElement extends HTMLElement {
@@ -46,7 +46,7 @@ function buildElement(tag, Element, properties) {
         }
     }
 
-    return document['registerElement'](tag, CustomElement)
+    return document.registerElement(tag, CustomElement)
 }
 
 export default buildElement

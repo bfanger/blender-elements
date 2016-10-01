@@ -4,18 +4,17 @@
   "description": "Bringing the UI controls from Blender to the web",
   "main": "dist/blender-elements.min.js",
   "scripts": {
-    "dev": "webpack-dev-server",
+    "dev": "webpack-dev-server --inline --hot",
     "start": "npm run dev"
   },
   "author": "Bob Fanger <bfanger@gmail.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "awesome-typescript-loader": "^1.1.1",
+    "awesome-typescript-loader": "^2.2.4",
     "raw-loader": "^0.5.1",
-    "typescript": "^1.8.10",
+    "rxjs": "^5.0.0-beta.12",
+    "typescript": "^2.0.3",
+    "webcomponents.js": "^0.7.22",
     "webpack": "^1.13.2"
-  },
-  "dependencies": {
-    "rxjs": "^5.0.0-beta.12"
   }
 }
