@@ -17,7 +17,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: 'raw'
+                loader: 'style!css-loader?modules&localIdentName=[local]🌀' //&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5] 
             }
         ]
     }
