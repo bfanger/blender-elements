@@ -1,4 +1,5 @@
-2 okt 2016
+
+## 2 okt 2016
 
 Using the WebComponents adds a complication, it is missing an unmount/cleanup step.
 The webcomponent.js polyfill is a disapointment, it uses deprecated api's and nothing worked out of the box and its travis build are failing for some time :-(
@@ -10,7 +11,7 @@ The dynamicly generated Components don't have any autocompletion, library users 
 I should decouple logic from the NumberElement for reuse in the slider element. 
 Stuff like value, value$, min, soft-min, max, soft-max, disabled, soft-disabled 
 
-Started doubting Rx again, mainly because i'm unable to subscribe to some internal observables because of the missing unmount hook in webcomponents.
+Started doubting Rx again, mainly because due to a limitation in the webcomponent api (no destructor hook) i'm unable to (un)subscribe to some internal observables.
 It also adds to the download size and i'm not sure how to make it an optional dependancy.
 Adding some local state and delegated event handlers will come a long way.
 
@@ -23,3 +24,7 @@ ShadowDOM is nice, but is not really required for my purpose. I'll try out css-m
 Export value$ as a ReplaySubject when window/Rx/BlenderElements.Observable and window/Rx/BlenderElements.Subject are available.
 
  
+## 7 okt 2016
+
+Typescript remains a mixed bag, it caught some issues, it also made it some javascript patterns harder, which required adding additional if statements to confince Typescript it was fine.
+Implemented number input using vanilla.js size now down to 12KB, much improved browser compatibility.

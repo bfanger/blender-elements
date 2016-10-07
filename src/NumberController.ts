@@ -1,4 +1,5 @@
 import noop from "./noop"
+import evaluate from "./evaluate"
 
 class NumberController {
 
@@ -8,13 +9,11 @@ class NumberController {
     private max: number
     private step: number
     private digits: number
-    private default: any
 
     constructor(options) {
         this.setValue(options.value)
         this.setStep(options.step)
         this.setDigits(options.digits)
-        this.default = options.default
     }
 
     getValue():number {
@@ -31,7 +30,9 @@ class NumberController {
         }
     }
     setValue(value, soft = false):void {
-        if (typeof value !== 'number') {
+        if (typeof value === 'string') {
+            value = evaluate(value)
+        } else if (typeof value !== 'number') {
             value = parseFloat(value)
         }
         if (typeof this.max === 'number' && value > this.max) {
@@ -45,14 +46,11 @@ class NumberController {
             value = Math.round(value * factor) / factor;
         }
         if (isNaN(value)) {
-            value = this.default 
+            value = this.confirmedValue 
         }
         if (this.value !== value) {
             this.value = value
         }
-    }
-    resetValue() {
-        this.value = this.default
     }
     increase() {
         this.setValue(this.value + this.step);

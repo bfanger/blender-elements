@@ -10,17 +10,13 @@ Hypothetical use-cases: Updating the [Three.js Editor](http://threejs.org/editor
 ## Highlights
 - Desktop first
 - Build as WebComponents
-- Uses Observables
 
 ### Desktop first
-The focus is on increasing productivity on desktop and taking adantage of things like: hover-state, click-and-drag, rightclick 
+The focus is on increasing productivity on desktop and taking advantage of things like: hover-state, click-and-drag, rightclick 
 
 ### Using webcomponents
 
 Framework agnostic, maybe some React wrappers are needed, but Angular 2 should work out of the box.
-
-## Uses Observables  
-Exposes the data as Observable streams. 
 
 # UseCase: Pixi Inspector
 - No direct access to the data.

@@ -1,5 +1,11 @@
+/**
+ * Blender's "Number Button"
+ * https://www.blender.org/manual/interface/controls/buttons/number.html
+ * 
+ * An full featured alternative for an <input type="number">
+ */
 import NumberController from "../NumberController"
-    import DragController from "../DragController"
+import DragController from "../DragController"
 import render from "../render"
 const style = require("./NumberElement.css")
 
@@ -22,8 +28,7 @@ class NumberElement extends HTMLElement {
         element.controller = new NumberController({
             value: element.getAttribute('value'),
             step: element.getAttribute('step'),
-            digits: element.getAttribute('digits'),
-            default: 0
+            digits: element.getAttribute('digits')
         })
         Object.defineProperty(element, 'value', {
             get() {
@@ -49,7 +54,11 @@ class NumberElement extends HTMLElement {
             right: this.querySelector('[ref="right"]') as HTMLSpanElement,
             input: this.querySelector('[ref="input"]') as HTMLInputElement, 
         }
-        refs.label.textContent = this.getAttribute('label')
+        if (this.getAttribute('label')) {
+            refs.label.textContent = this.getAttribute('label')
+        } else {
+            refs.label.classList.add(style['number__label--empty'])
+        }
         refs.input.value = this.controller.valueString()
         refs.value.textContent = this.controller.valueString()
 
@@ -61,8 +70,8 @@ class NumberElement extends HTMLElement {
             refs.input.select()
         }
         refs.input.onblur = e => {
-            refs.value.textContent = this.controller.valueString()
-            this.controller.confirmValue()
+            this.controller.confirmValue(refs.input.value)
+            this.render()
         }
         refs.input.onkeydown = e => {
             if (e.keyCode == 27) { // ESC
@@ -77,9 +86,13 @@ class NumberElement extends HTMLElement {
         const moveThreshold = 5
 
         refs.input.onmousedown = (event) => {
+            if (event.button !== 0) {
+                return
+            }
             event.preventDefault()
             state.mouseMoved = false
             const drag = new DragController(event, (move, withShift) => {
+                // mouseMove
                 const offsetX = drag.getOffset().x
                 if (state.mouseMoved === false && Math.abs(offsetX) < moveThreshold) {
                     return
@@ -87,9 +100,11 @@ class NumberElement extends HTMLElement {
                 state.mouseMoved = true
                 refs.input.classList.add(style['number__input--active'])
                 const factor = withShift ? 0.1 : 1
+                // @todo discrete step when dragging with ctrl
                 this.controller.setOffset(offsetX * factor)
                 refs.input.value = this.controller.valueString()
             }, () => {
+                // mouseUp
                 if (state.mouseMoved) {
                     refs.input.classList.remove(style['number__input--active'])
                     this.controller.confirmValue()
@@ -112,18 +127,11 @@ class NumberElement extends HTMLElement {
             }, () => {
                 this.controller.restore()
                 refs.input.classList.remove(style['number__input--active'])
+                refs.input.blur()
             })
         }
-        
-        // refs.input.onmousemove = e => {
-        //     if (state.mouseDown === null) {
-        //         return
-        //     }
-        
-        // }
     }
     disconnectedCallback() {
-        console.log('disconnected')
         this.children.item(0).remove();
     }
     attributeChangedCallback(name:string, oldValue:string, newValue:string) {

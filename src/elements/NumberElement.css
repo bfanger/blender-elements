@@ -28,6 +28,9 @@
 .number__label:after {
     content: ':';
 }
+.number__label--empty:after {
+    content: ''
+}
 
 .arrow {
     width: 1.1em;
