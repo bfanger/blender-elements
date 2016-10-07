@@ -1,4 +1,5 @@
 import NumberController from "../NumberController"
+    import DragController from "../DragController"
 import render from "../render"
 const style = require("./NumberElement.css")
 
@@ -18,7 +19,6 @@ class NumberElement extends HTMLElement {
 
     constructor(element:NumberElement) {
         super()
-        // console.log('created', element, this)
         element.controller = new NumberController({
             value: element.getAttribute('value'),
             step: element.getAttribute('step'),
@@ -30,7 +30,7 @@ class NumberElement extends HTMLElement {
                 return element.controller.getValue()
             },
             set(value) {
-                element.controller.setValue(value)
+                element.controller.confirmValue(value)
                 element.render()
             }
         })
@@ -41,7 +41,6 @@ class NumberElement extends HTMLElement {
         return ['value', 'min', 'max', 'soft-min', 'soft-max', 'step', 'digits']
     }
     connectedCallback() {
-        // console.log('connected', this)
         this.appendChild(dom.cloneNode(true))
         const refs = {
             label: this.querySelector('[ref="label"]') as HTMLSpanElement,
@@ -55,21 +54,19 @@ class NumberElement extends HTMLElement {
         refs.value.textContent = this.controller.valueString()
 
         const state = {
-            previousValue: NaN as number,
-            mouseDown: null as MouseEvent | null,
             mouseMoved: false
         }
         refs.input.onfocus = e => {
-            state.previousValue = this.controller.getValue()
             refs.input.value = this.controller.valueString().replace(/\.0[0]+/, '.0')
             refs.input.select()
         }
         refs.input.onblur = e => {
             refs.value.textContent = this.controller.valueString()
+            this.controller.confirmValue()
         }
         refs.input.onkeydown = e => {
             if (e.keyCode == 27) { // ESC
-                this.controller.setValue(state.previousValue)
+                this.controller.restore()
                 refs.input.blur()
             }
             if (e.keyCode === 13) { // Enter
@@ -79,29 +76,51 @@ class NumberElement extends HTMLElement {
         }
         const moveThreshold = 5
 
-        refs.input.onmousedown =  e => {
-            e.preventDefault()
-            state.mouseDown = e
+        refs.input.onmousedown = (event) => {
+            event.preventDefault()
+            state.mouseMoved = false
+            const drag = new DragController(event, (move, withShift) => {
+                const offsetX = drag.getOffset().x
+                if (state.mouseMoved === false && Math.abs(offsetX) < moveThreshold) {
+                    return
+                }
+                state.mouseMoved = true
+                refs.input.classList.add(style['number__input--active'])
+                const factor = withShift ? 0.1 : 1
+                this.controller.setOffset(offsetX * factor)
+                refs.input.value = this.controller.valueString()
+            }, () => {
+                if (state.mouseMoved) {
+                    refs.input.classList.remove(style['number__input--active'])
+                    this.controller.confirmValue()
+                    this.render()
+                    return
+                }
+                const leftArrow = refs.left.getBoundingClientRect()
+                if (leftArrow.left < event.clientX && leftArrow.right > event.clientX) {
+                    this.controller.decrease()
+                    this.render()
+                    return;
+                }
+                const rightArrow = refs.right.getBoundingClientRect()
+                if (rightArrow.left < event.clientX && rightArrow.right > event.clientX) {
+                    this.controller.increase()
+                    this.render()
+                    return;
+                }
+                refs.input.focus()
+            }, () => {
+                this.controller.restore()
+                refs.input.classList.remove(style['number__input--active'])
+            })
         }
-        refs.input.onmouseup = e => {
-            state.mouseDown = null
-            if (state.mouseMoved) {
-                return
-            }
-            const leftArrow = refs.left.getBoundingClientRect()
-            if (leftArrow.left < e.clientX && leftArrow.right > e.clientX) {
-                this.controller.decrease()
-                this.render()
-                return;
-            }
-            const rightArrow = refs.right.getBoundingClientRect()
-            if (rightArrow.left < e.clientX && rightArrow.right > e.clientX) {
-                this.controller.increase()
-                this.render()
-                return;
-            }
-            refs.input.focus()
-        }
+        
+        // refs.input.onmousemove = e => {
+        //     if (state.mouseDown === null) {
+        //         return
+        //     }
+        
+        // }
     }
     disconnectedCallback() {
         console.log('disconnected')
@@ -110,7 +129,7 @@ class NumberElement extends HTMLElement {
     attributeChangedCallback(name:string, oldValue:string, newValue:string) {
         switch (name) {
             case 'value':
-                this.controller.setValue(newValue)
+                this.controller.confirmValue(newValue)
                 break;
             case 'step':
                 this.controller.setStep(newValue)

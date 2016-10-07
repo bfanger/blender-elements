@@ -1,8 +1,9 @@
-const noop =  () => {};
+import noop from "./noop"
 
 class NumberController {
 
     private value: number
+    private confirmedValue: number
     private min: number
     private max: number
     private step: number
@@ -29,7 +30,7 @@ class NumberController {
             return this.value.toFixed(this.digits)
         }
     }
-    setValue(value):void {
+    setValue(value, soft = false):void {
         if (typeof value !== 'number') {
             value = parseFloat(value)
         }
@@ -51,13 +52,25 @@ class NumberController {
         }
     }
     resetValue() {
-        this.value = NaN
+        this.value = this.default
     }
-    increase(units = 1) {
-        this.setValue(this.value + (units * this.step));
+    increase() {
+        this.setValue(this.value + this.step);
     }
-    decrease(units = 1) {
-        this.setValue(this.value - (units * this.step));
+    decrease() {
+        this.setValue(this.value - this.step);
+    }
+    setOffset(offset) {
+        this.setValue(this.confirmedValue + (offset * this.step));
+    }
+    confirmValue(value?) {
+        if (arguments.length === 1) {
+            this.setValue(value)
+        }
+        this.confirmedValue = this.value
+    }
+    restore() {
+        this.value = this.confirmedValue 
     }
     setStep(stepSize) {
         this.step = parseFloat(stepSize) || 1;

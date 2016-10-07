@@ -62,6 +62,7 @@
     line-height: 1.5em;
     font: 1em sans-serif;
     background: linear-gradient(to bottom, #848484, #989898);
+    color: #fff;
     padding: 0 0.75em;
     border: 0;
     outline: none;
@@ -69,6 +70,7 @@
     cursor: default;
     opacity: 0;
 }
+.number__input--active,
 .number__input:focus {
     opacity: 1;
 }
