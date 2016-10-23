@@ -1,0 +1,37 @@
+@import "../theme";
+
+.button {
+    @include shaded($toolInner, $toolShadeTop, $toolShadeBottom);
+    border: 1px solid $toolOutline;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    -webkit-appearance: none;
+    height: 1.7em;
+    padding: 0;
+    line-height: 1;
+    border-radius: .45em;
+    box-sizing: border-box;
+    outline: none;
+    color: $toolText;
+    @include embedded;
+    &:focus {
+        @include shaded($toolInner, $toolShadeTop + $focusAmount, $toolShadeBottom + $focusAmount);
+    }
+    &:hover {
+        @include shaded($toolInner, $toolShadeTop + $hoverAmount, $toolShadeBottom + $hoverAmount);
+    }
+    &:active {
+        @include shaded($toolInnerSelected, $toolShadeTop * -1, $toolShadeBottom * -1);
+        color: $toolTextSelected;
+    }
+}
+.button__icon {
+    height: 90%;
+}
+.button__label {
+    flex-grow: 1;
+    text-align: center; /* not always...*/
+    white-space: nowrap;
+}

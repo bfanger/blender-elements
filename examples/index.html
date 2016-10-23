@@ -10,23 +10,28 @@
     }
 </style>
 <body>
-    <h2>Blender NumberElement</h2>
+    <h2>Blender Elements</h2>
     <div style="padding: 30px 50px; max-width: 300px; background: #727272; font-size: 12px">
         <b-number label="Frame step" value="10" step="0.1" digits="3" title="Number of frames to skip forward while rendering/playing back each frame"></b-number>
+        <br>
+        <b-button icon="../img/plus.svg" label="New Layer"></b-button>
     </div>
-    <h2>Native HTML5 number input</h2>
+    <h2>Native HTML5 elements</h2>
     <div style="font-family: sans-serif; font-size: 12px; padding: 30px 50px; max-width: 300px; background: #eee;">
         <label>Frame step <input type="number" value="10" step="0.1" title="Test"></label>
+        <br><br>
+        <button>New Layer</button>
     </div>
 
     <script>
         var number = document.querySelector('b-number')
         console.dir(number)
-        // console.dir(number.show)
-        // number.value$.subscribe(value => console.log('value', value))
-        // number.setAttribute('value', 123)
-        // setTimeout(() => {
-        //     number.setAttribute('value', 456)
-        // }, 300)
+
+        var button = document.querySelector('b-button')
+        console.dir(button)
+        button.onclick = function () {
+            console.log('clicked')
+        }
+        
     </script>
 </body>

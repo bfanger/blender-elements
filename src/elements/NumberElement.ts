@@ -7,7 +7,7 @@
 import NumberController from "../NumberController"
 import DragController from "../DragController"
 import render from "../render"
-const style = require("./NumberElement.css")
+const style = require("./NumberElement.scss")
 
 const dom = render(`
 <label class="${style.number}">
@@ -23,6 +23,10 @@ class NumberElement extends HTMLElement {
     public value:number
     private controller: NumberController
 
+    static get observedAttributes() {
+        return ['value', 'step', 'digits']
+    }
+    
     constructor(element:NumberElement) {
         super()
         element.controller = new NumberController({
@@ -39,12 +43,8 @@ class NumberElement extends HTMLElement {
                 element.render()
             }
         })
-        
     }
 
-    static get observedAttributes() {
-        return ['value', 'min', 'max', 'soft-min', 'soft-max', 'step', 'digits']
-    }
     connectedCallback() {
         this.appendChild(dom.cloneNode(true))
         const refs = {
@@ -86,7 +86,7 @@ class NumberElement extends HTMLElement {
         const moveThreshold = 5
 
         refs.input.onmousedown = (event) => {
-            if (event.button !== 0) {
+            if (event.button !== 0 || document.activeElement === refs.input) {
                 return
             }
             event.preventDefault()
@@ -129,6 +129,18 @@ class NumberElement extends HTMLElement {
                 refs.input.classList.remove(style['number__input--active'])
                 refs.input.blur()
             })
+        }
+        refs.input.onmousewheel = e => {
+            if (e.ctrlKey === false || document.activeElement === refs.input) {
+                return;
+            }
+            e.preventDefault()
+            if (e.deltaY < 0) {
+                this.controller.increase()
+            } else {
+                this.controller.decrease()
+            }
+            this.render()
         }
     }
     disconnectedCallback() {
