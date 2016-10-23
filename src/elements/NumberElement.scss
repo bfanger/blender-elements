@@ -3,16 +3,17 @@
 .number {
     position: relative;
     display: flex;
-    font: 1em sans-serif;
+    align-items: center;
+    @include font();
     width: 100%;
-    height: 1.7em;
-    line-height: 1.7em;
+    height: 1.6em;
+    line-height: 1.6;
     border-radius: .75em;
     @include shaded($numberInner, $numberShadeTop, $numberShadeBottom); 
     overflow: hidden;
-    border: 1px solid $numberOutline;
-    box-sizing: border-box;
-    @include embedded;
+    border: 1px solid rgba($numberOutline, 0.8);
+    box-sizing: content-box;
+    @include emboss;
     &:hover {
         @include shaded($numberInner, $numberShadeTop + $hoverAmount, $numberShadeBottom + $hoverAmount);
     }
@@ -38,6 +39,7 @@
 
 .arrow {
     width: 1.25em;
+    height: 100%;
     position: relative;
 }
 .arrow:after {
@@ -65,10 +67,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    box-sizing: padding-box;
-    height: 1.5em;
-    line-height: 1.5em;
-    font: 1em sans-serif;
+    box-sizing: border-box;
+    height: 100%;
+    line-height: 1.5;
+    @include font();
     @include shaded($numberInnerSelected, $numberShadeTop, $numberShadeBottom);
     color: $numberTextSelected;
     padding: 0 0.75em;
@@ -86,4 +88,19 @@
 .number__input::selection {
     background: $numberItem;
     color: $numberTextSelected;
+}
+b-group > b-number {
+    .number {
+        border-radius: 0;
+        border-top-width: 0;
+    }
+    &:first-child .number {
+        border-top-width: 1px;
+        border-top-left-radius: .75em;
+        border-top-right-radius: .75em;
+    }
+    &:last-child .number {
+        border-bottom-left-radius: .75em;
+        border-bottom-right-radius: .75em;
+    }
 }

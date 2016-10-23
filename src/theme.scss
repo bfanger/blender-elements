@@ -1,3 +1,8 @@
+@mixin font() {
+    font: 1em sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 @function shiftColor($color, $amount) {
     @return rgb(red($color) + $amount, green($color) + $amount, blue($color) + $amount); 
 }
@@ -6,10 +11,11 @@
     background: linear-gradient(to bottom, shiftColor($color, $shadeTop), shiftColor($color, $shadeBottom));
 }
 // Give the box a thin line at the bottom
-@mixin embedded() {
+@mixin emboss() {
     box-shadow: 0 1px 0 rgba(#fff, 0.15);
 }
 
+$font: 1em sans-serif;
 $hoverAmount: 15 !default;
 $focusAmount: 10 !default;
 

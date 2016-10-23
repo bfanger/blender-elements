@@ -2,20 +2,19 @@
 
 .button {
     @include shaded($toolInner, $toolShadeTop, $toolShadeBottom);
-    border: 1px solid $toolOutline;
+    border: 1px solid rgba($toolOutline, 0.8);
     display: flex;
     align-items: center;
     overflow: hidden;
     width: 100%;
     -webkit-appearance: none;
-    height: 1.7em;
+    height: 1.6em;
     padding: 0;
-    line-height: 1;
     border-radius: .45em;
-    box-sizing: border-box;
+    box-sizing: content-box;
     outline: none;
     color: $toolText;
-    @include embedded;
+    @include emboss;
     &:focus {
         @include shaded($toolInner, $toolShadeTop + $focusAmount, $toolShadeBottom + $focusAmount);
     }
@@ -28,10 +27,38 @@
     }
 }
 .button__icon {
-    height: 90%;
+    width: 1.3em;
+    height: 1.3em;
+    margin-left: 0.3em;
+    object-fit: contain;
+    display: none;
+}
+.button__icon[src] {
+    display: inline-block;
 }
 .button__label {
     flex-grow: 1;
-    text-align: center; /* not always...*/
+    text-align: center;
     white-space: nowrap;
+    @include font();
+    line-height: 1.6;
+}
+b-group > b-button {
+    .button {
+        border-radius: 0;
+        border-top-width: 0;        
+    }
+    .button__label {
+        text-align: left;
+        margin-left: 0.4em;
+    }
+    &:first-child .button {
+        border-top-width: 1px;
+        border-top-left-radius: .45em;
+        border-top-right-radius: .45em;
+    }
+    &:last-child .button {
+        border-bottom-left-radius: .45em;
+        border-bottom-right-radius: .45em;
+    }
 }

@@ -5,7 +5,8 @@
   "main": "dist/blender-elements.min.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "build": "webpack -p"
   },
   "author": "Bob Fanger <bfanger@gmail.com>",
   "license": "GPL-3.0",
