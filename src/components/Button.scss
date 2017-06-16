@@ -1,0 +1,51 @@
+@import  '../settings.scss';
+
+:host {
+    // display: block;
+}
+button {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 0 0.5em;
+    overflow: hidden;
+    -webkit-appearance: none;
+    background: var(--b-tool-inner);
+    color: var(--b-tool-text);
+    border: 1px solid var(--b-tool-outline);
+    border-top-width: var(--b-button-border-top, 1px);
+    border-left-width: var(--b-button-border-left, 1px);
+    border-top-left-radius: var(--b-button-top-left-radius, $buttonRadius);
+    border-top-right-radius: var(--b-button-top-right-radius, $buttonRadius);
+    border-bottom-right-radius: var(--b-button-bottom-right-radius, $buttonRadius);
+    border-bottom-left-radius: var(--b-button-bottom-left-radius, $buttonRadius);
+    font-size: var(--b-font-size);
+    line-height: 1.7;
+    white-space: nowrap;
+
+    @include emboss();
+
+    &:focus,
+    &:hover {
+        outline: none;
+        position: relative;
+
+        &:after {
+            background: rgba(#fff, 0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            content: '';
+            pointer-events: none;
+        }
+    }
+    &:active {
+        &:after {
+            display: none;
+        }
+        background: var(--b-tool-inner-selected);
+        color: var(--b-tool-text-selected);
+    }
+}

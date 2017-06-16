@@ -1,0 +1,15 @@
+$buttonRadius: 4px;
+
+@mixin emboss {
+    box-shadow: 1px 1px 0 0 var(--b-emboss);
+}
+
+@function shade($color, $shade) {
+    @if $shade >= 0 {
+        @return lighten($color, $shade * 0.5)
+    }
+    @else {
+        @return darken($color, $shade * -0.5)
+    }
+}
+
