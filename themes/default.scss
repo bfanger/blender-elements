@@ -3,12 +3,10 @@
 
 html {
     --b-font-size: 1em;
-    $toolInner: #999999;
-    $toolInnerSelected: #646464;
     $toolShadeTop: 15;
     $toolShadeDown: -15;
-    --b-tool-inner: linear-gradient(to bottom, shade($toolInner, $toolShadeTop), shade($toolInner, $toolShadeDown));
-    --b-tool-inner-selected: linear-gradient(to top, shade($toolInnerSelected, $toolShadeTop), shade($toolInnerSelected, $toolShadeDown));
+    --b-tool-inner: shaded(#999999, $toolShadeTop, $toolShadeDown);
+    --b-tool-inner-selected: shaded(#646464, $toolShadeDown, $toolShadeTop);
     --b-tool-text: #000;
     --b-tool-text-selected: #fff;
     --b-tool-outline: #191919;

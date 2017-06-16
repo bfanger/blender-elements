@@ -1,0 +1,22 @@
+
+html {
+    margin: 5px 15px;
+    max-width: 650px;
+    line-height: 1.4;
+    font-size: 15px;
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+}
+a {
+    color: #1474f3;
+    text-decoration: 'underline';
+    cursor: pointer;
+}
+
+code {
+    display: block;
+    background: #1e1e1e;
+    color: #54cf9a;
+    padding: 10px 7px;
+    border-radius: 6px;
+    font-size: 14px;
+}

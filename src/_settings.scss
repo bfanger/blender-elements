@@ -4,12 +4,9 @@ $buttonRadius: 4px;
     box-shadow: 1px 1px 0 0 var(--b-emboss);
 }
 
-@function shade($color, $shade) {
-    @if $shade >= 0 {
-        @return lighten($color, $shade * 0.5)
-    }
-    @else {
-        @return darken($color, $shade * -0.5)
-    }
+// Background gradient based on one color and shades
+@function shaded($color, $shadeTop, $shadeBottom) {
+    $topColor: rgb(red($color) + $shadeTop, green($color) + $shadeTop, blue($color) + $shadeTop);
+    $bottomColor: rgb(red($color) + $shadeBottom, green($color) + $shadeBottom, blue($color) + $shadeBottom);
+    @return linear-gradient(to bottom, $topColor, $bottomColor);
 }
-

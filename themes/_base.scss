@@ -1,4 +1,11 @@
 
+p-panel {
+    display: block;
+    padding: 1em .5em;
+    background: #727272;
+    font-size: 12px;
+}
+
 b-horizontal {
     display: flex;
     & > b-button {

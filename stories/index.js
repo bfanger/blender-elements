@@ -3,12 +3,10 @@
 import '../src'
 
 import React from 'react'
-
 import { storiesOf } from '@storybook/react'
-import { linkTo } from '@storybook/addon-links'
-
 import Welcome from './Welcome'
 import buttonStories from './buttonStories'
+import './documentation.scss'
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
+storiesOf('Welcome', module).add('to Blender Elements', () => <Welcome />)
 buttonStories(storiesOf('Button', module))

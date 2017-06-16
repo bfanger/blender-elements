@@ -12,7 +12,7 @@ module.exports = function (config, mode) {
     use: ['css-loader', 'sass-loader']
   }, {
     test: /\.scss$/,
-    include: [path.join(__dirname, '../themes')],
+    include: [path.join(__dirname, '../themes'), path.join(__dirname, '../stories')],
     use: ['style-loader', 'css-loader', 'sass-loader']
   })
   return config
