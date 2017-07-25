@@ -1,0 +1,28 @@
+@import  '../settings.scss';
+
+:host {
+    display: flex;
+}
+
+b-row {
+    display: flex;
+    & > b-button {
+        flex: 1;
+        min-width: 0;
+
+        --b-button-border-left: 0;
+        --b-button-top-left-radius: 0;
+        --b-button-top-right-radius: 0;
+        --b-button-bottom-right-radius: 0;
+        --b-button-bottom-left-radius: 0;
+        &:first-child {
+            --b-button-border-left: 1px;
+            --b-button-top-left-radius: $buttonRadius;
+            --b-button-bottom-left-radius: $buttonRadius;
+        }
+        &:last-child {
+            --b-button-top-right-radius: $buttonRadius;
+            --b-button-bottom-right-radius: $buttonRadius;
+        }
+    }
+}

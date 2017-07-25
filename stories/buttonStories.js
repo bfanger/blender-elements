@@ -1,22 +1,15 @@
 import React from 'react'
-import { action } from '@storybook/addon-actions'
-// import styles from './styles'
+import { storiesOf } from '@storybook/react'
+import Page from './components/Page'
+import Example from './components/Example'
 
-export default story => {
-  story
-        .add('with text', () => <div>
+storiesOf('Button', module)
+    .addDecorator(story => (<Page>{story()}</Page>))
+    .add('with text', () => (
+        <div>
             <h1>&lt;b-button&gt; element</h1>
 
-            <p>Usage:</p>
-            <code>
-                &lt;b-button&gt;My button&lt;/b-button&gt;
-            </code>
-            <p>Example:</p>
-            <p-panel>
-                 <div style={{ maxWidth: 200 }}>
-                    <b-button onClick={action('onClick')}>My button</b-button>
-                </div>
-            </p-panel>
+            <Example code='<b-button>My button</b-button>' />
             <p>Compared to a regular button element, a Blender button will:</p>
             <ul>
                 <li>Stretch to the width of the container (display: block)</li>
@@ -24,21 +17,20 @@ export default story => {
                 <li>Can be grouped vertically and horizontally</li>
             </ul>
         </div>
-    )
-    .add('in a group', () => <div className='doc__page'>
-        <p-panel>
-            <b-horizontal>
-                <b-button>Render</b-button>
-                <b-button>Animation</b-button>
-                <b-button>Audio</b-button>
-            </b-horizontal>
+    )).add('in a group', () => (
+        <div>
+            <Example code={
+                `<b-row>
+    <b-button>Render</b-button>
+    <b-button>Animation</b-button>
+    <b-button>Audio</b-button>
+</b-row>`} />
 
-            <b-vertical style={{ marginTop: '1em' }}>
-                <b-button>Translate</b-button>
-                <b-button>Rotate</b-button>
-                <b-button>Scale</b-button>
-            </b-vertical>
-        </p-panel>
-
-    </div>)
-}
+            <Example code={
+                `<b-column>
+    <b-button>Translate</b-button>
+    <b-button>Rotate</b-button>
+    <b-button>Scale</b-button>
+</b-column>`} />
+        </div>
+    ))

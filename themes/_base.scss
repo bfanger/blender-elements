@@ -1,12 +1,12 @@
 
-p-panel {
+b-panel {
     display: block;
     padding: 1em .5em;
     background: #727272;
     font-size: 12px;
 }
 
-b-horizontal {
+b-row {
     display: flex;
     & > b-button {
         flex: 1;
@@ -29,7 +29,7 @@ b-horizontal {
     }
 }
 
-b-vertical {
+b-column {
     display: flex;
     flex-direction: column;
 

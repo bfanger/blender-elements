@@ -11,7 +11,7 @@ export default class Button extends HTMLElement {
     const shadowRoot = this.attachShadow({ mode: 'open' })
     shadowRoot.innerHTML = `
 <style>${style}</style>
-<button><slot></slot></div>
+<button><slot></slot>&nbsp;</button>
 `
   }
 }
