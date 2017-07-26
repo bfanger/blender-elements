@@ -4,7 +4,7 @@
   "description": "Bringing the UI controls from Blender to the web",
   "main": "dist/index.js",
   "scripts": {
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -s ./build -p 6006",
     "build-storybook": "build-storybook",
     "test": "eslint src stories"
   },
@@ -18,6 +18,9 @@
     "extends": [
       "vue",
       "plugin:react/recommended"
+    ],
+    "plugins": [
+      "only-warn"
     ]
   },
   "devDependencies": {
@@ -27,12 +30,17 @@
     "babel-eslint": "^7.2.3",
     "bootstrap": "^3.3.7",
     "css-loader": "^0.28.4",
+    "dejavu-sans": "^1.0.0",
     "eslint": "^4.3.0",
     "eslint-config-vue": "^2.0.2",
     "eslint-plugin-html": "^3.0.0",
+    "eslint-plugin-only-warn": "^1.0.1",
     "eslint-plugin-react": "^7.1.0",
     "eslint-plugin-vue": "^2.0.1",
     "extract-text-webpack-plugin": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-livereload": "^3.8.1",
+    "gulp-sass": "^3.1.0",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
     "react-ace": "^5.1.1",

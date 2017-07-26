@@ -1,0 +1,57 @@
+<template>
+  <link rel="stylesheet" href="button.css" />
+  <button><slot></slot>&nbsp;</button>
+</template>
+
+
+<script>
+  // @todo icon-text mode
+  // @todo icon mode (fixed width)
+
+  const template = document.currentScript.ownerDocument.querySelector('template')
+  const dom = Symbol('dom')
+
+  /**
+   * A button.
+   *
+   * Usage:
+   *   <b-button>My button</b-button>
+   */
+  customElements.define('b-button', class Button extends HTMLElement {
+    connectedCallback () {
+      const fragment = template.content.cloneNode(true)
+      const button = fragment.lastElementChild
+      button.disabled = this.hasAttribute('disabled')
+      button.addEventListener('mouseenter', () => {
+        button.focus()
+      })
+      button.addEventListener('mouseleave', () => {
+        button.blur()
+      })
+      this[dom] = button
+      const shadowRoot = this.attachShadow({ mode: 'closed' })
+      shadowRoot.appendChild(fragment)
+    }
+    disconnectedCallback () {
+      this[dom] = null
+    }
+    static get observedAttributes () { return ['disabled'] }
+    attributeChangedCallback (attribute, previous, next, namespace) {
+      if (attribute === 'disabled' && this[dom]) {
+        this[dom].disabled = (next !== null)
+      }
+    }
+
+    get disabled () {
+      return this.hasAttribute('disabled')
+    }
+    set disabled (disabled) {
+      if (disabled) {
+        this.setAttribute('disabled', '')
+      } else {
+        this.removeAttribute('disabled')
+      }
+    }
+  })
+
+</script>

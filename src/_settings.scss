@@ -1,7 +1,9 @@
+
 $buttonRadius: 4px;
 
+
 @mixin emboss {
-    box-shadow: 1px 1px 0 0 var(--b-emboss);
+    box-shadow: 0 .5px 0 0 var(--b-emboss, $emboss);
 }
 
 // Background gradient based on one color and shades
@@ -10,3 +12,20 @@ $buttonRadius: 4px;
     $bottomColor: rgb(red($color) + $shadeBottom, green($color) + $shadeBottom, blue($color) + $shadeBottom);
     @return linear-gradient(to bottom, $topColor, $bottomColor);
 }
+
+@mixin font() {
+    font-size: var(--b-font-size, $fontSize);
+    font-family: var(--b-font-family, $fontFamily);
+}
+
+// Defaults / no theme
+$fontSize: 8pt;
+$fontFamily: 'BFont', wingdings, sans-serif;
+$toolShadeTop: 15;
+$toolShadeDown: -15;
+$toolInner: shaded(#999999, $toolShadeTop, $toolShadeDown);
+$toolInnerSelected: shaded(#646464, $toolShadeDown, $toolShadeTop);
+$toolText: #000;
+$toolTextSelected: #fff;
+$toolOutline: #393939; // #191919;
+$emboss: rgba(#fff, 0.2);

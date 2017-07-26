@@ -1,0 +1,17 @@
+@import  '../settings.scss';
+
+@font-face {
+    font-family: 'BFont';
+    src: url('../fonts/dejavu-sans.woff'), local('DejaVu Sans')
+}
+
+.b-theme--default {
+    --b-font-size: $fontSize;
+    --b-font-family: $fontFamily;
+    --b-tool-inner: $toolInner;
+    --b-tool-inner-selected: $toolInnerSelected;
+    --b-tool-text: $toolText;
+    --b-tool-text-selected: $toolTextSelected;
+    --b-tool-outline: $toolOutline;
+    --b-emboss: $emboss;
+}
