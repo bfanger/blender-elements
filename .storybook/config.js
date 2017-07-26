@@ -1,13 +1,8 @@
 import { configure } from '@storybook/react'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import blenderElements from '../src'
 
-// if (process.env.USE_DIST) {
-//   require('../dist/blender-elements')
-//   require('../dist/themes/default.css')
-// } else {
-//   require('../src')
-// }
-
+window.blenderElements = blenderElements
 
 configure(() => {
   require('../stories/intro')

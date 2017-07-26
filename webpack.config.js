@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     library: 'blenderElements',
-    filename: 'dist/blender-elements.js'
+    filename: 'build/blender-elements.js'
   },
   module: {
     rules: [{

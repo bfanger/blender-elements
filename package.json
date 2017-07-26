@@ -6,7 +6,8 @@
   "scripts": {
     "storybook": "start-storybook -s ./build -p 6006",
     "build-storybook": "build-storybook",
-    "test": "eslint src stories"
+    "test": "eslint src stories",
+    "build": "webpack && gulp build"
   },
   "author": "Bob Fanger <bfanger@gmail.com>",
   "license": "GPL-3.0",
@@ -21,7 +22,10 @@
     ],
     "plugins": [
       "only-warn"
-    ]
+    ],
+    "globals": {
+      "blenderElements": true
+    }
   },
   "devDependencies": {
     "@storybook/addon-knobs": "^3.1.9",

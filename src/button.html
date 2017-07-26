@@ -1,57 +1,51 @@
 <template>
   <link rel="stylesheet" href="button.css" />
-  <button><slot></slot>&nbsp;</button>
+  <button><slot></slot><span>&nbsp;</span></button>
 </template>
 
-
 <script>
-  // @todo icon-text mode
-  // @todo icon mode (fixed width)
-
   const template = document.currentScript.ownerDocument.querySelector('template')
   const dom = Symbol('dom')
 
   /**
    * A button.
+   * @todo icon-text mode
+   * @todo icon mode (fixed width)
    *
    * Usage:
-   *   <b-button>My button</b-button>
+   *   <b-button value="My button"></b-button>
    */
-  customElements.define('b-button', class Button extends HTMLElement {
+  class Button extends HTMLElement {
     connectedCallback () {
       const fragment = template.content.cloneNode(true)
       const button = fragment.lastElementChild
-      button.disabled = this.hasAttribute('disabled')
-      button.addEventListener('mouseenter', () => {
-        button.focus()
-      })
-      button.addEventListener('mouseleave', () => {
-        button.blur()
-      })
+      button.addEventListener('mouseenter', (e) => { button.focus() })
+      button.addEventListener('mouseleave', () => { button.blur() })
       this[dom] = button
+      blenderElements.lifecycle.connected(this)
       const shadowRoot = this.attachShadow({ mode: 'closed' })
       shadowRoot.appendChild(fragment)
     }
     disconnectedCallback () {
       this[dom] = null
     }
-    static get observedAttributes () { return ['disabled'] }
-    attributeChangedCallback (attribute, previous, next, namespace) {
-      if (attribute === 'disabled' && this[dom]) {
-        this[dom].disabled = (next !== null)
-      }
-    }
+  }
 
-    get disabled () {
-      return this.hasAttribute('disabled')
-    }
-    set disabled (disabled) {
-      if (disabled) {
-        this.setAttribute('disabled', '')
-      } else {
-        this.removeAttribute('disabled')
-      }
+  blenderElements.booleanAttribute(Button, 'disabled', function (value) {
+    if (this[dom]) {
+      this[dom].disabled = value
     }
   })
+  // blenderElements.stringAttribute(Button, 'title', function (title) {
+  //   if (this[dom]) {
+  //     if (title === null) {
+  //       this[dom].lastElementChild.innerHTML = '&nbsp;'
+  //     } else {
+  //       this[dom].lastElementChild.textContent = title
+  //     }
+  //   }
+  // })
+
+  customElements.define('b-button', Button)
 
 </script>
