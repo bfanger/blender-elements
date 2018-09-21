@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import { linkTo } from '@storybook/addon-links'
 
 export default class Welcome extends Component {
-
   render () {
     return (
       <div>

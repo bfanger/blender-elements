@@ -7,17 +7,19 @@
     "storybook": "start-storybook -s ./build -p 6006",
     "build-storybook": "build-storybook",
     "test": "eslint src stories",
-    "build": "webpack && gulp build"
+    "build": "webpack --mode production && gulp build"
   },
   "author": "Bob Fanger <bfanger@gmail.com>",
   "license": "GPL-3.0",
   "eslintConfig": {
-    "parser": "babel-eslint",
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
     "env": {
       "browser": true
     },
     "extends": [
-      "vue",
+      "plugin:vue/recommended",
       "plugin:react/recommended"
     ],
     "plugins": [
@@ -25,34 +27,40 @@
     ],
     "globals": {
       "blenderElements": true
+    },
+    "settings": {
+      "react": {
+        "version": "16"
+      }
     }
   },
   "devDependencies": {
     "@storybook/addon-knobs": "^3.1.9",
     "@storybook/addon-notes": "^3.1.6",
     "@storybook/react": "^3.1.3",
-    "babel-eslint": "^7.2.3",
-    "bootstrap": "^3.3.7",
-    "css-loader": "^0.28.4",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^9.0.0",
+    "bootstrap": "^4.1.2",
+    "css-loader": "^1.0.0",
     "dejavu-sans": "^1.0.0",
-    "eslint": "^4.3.0",
-    "eslint-config-vue": "^2.0.2",
-    "eslint-plugin-html": "^3.0.0",
+    "eslint": "^5.6.0",
+    "eslint-plugin-html": "^4.0.5",
     "eslint-plugin-only-warn": "^1.0.1",
     "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-vue": "^2.0.1",
-    "extract-text-webpack-plugin": "^3.0.0",
+    "eslint-plugin-vue": "^4.7.1",
     "gulp": "^3.9.1",
-    "gulp-livereload": "^3.8.1",
-    "gulp-sass": "^3.1.0",
+    "gulp-livereload": "^4.0.0",
+    "gulp-sass": "^4.0.1",
+    "mini-css-extract-plugin": "^0.4.3",
     "node-sass": "^4.5.3",
-    "react": "^15.6.1",
-    "react-ace": "^5.1.1",
-    "react-dom": "^15.6.1",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
-    "styled-components": "^2.1.1",
-    "webpack": "^3.4.0",
-    "webpack-dev-server": "^2.4.5"
+    "react": "^16.5.2",
+    "react-ace": "^6.1.4",
+    "react-dom": "^16.5.2",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
+    "styled-components": "^3.4.9",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
   }
 }

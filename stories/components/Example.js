@@ -17,7 +17,6 @@ const PreviewPanel = styled.div`
 `
 
 export default class Example extends Component {
-
   constructor (props) {
     super(props)
     this.state = this.calcState(props.code)
@@ -39,8 +38,8 @@ export default class Example extends Component {
             highlightActiveLine={false}
             value={code}
             onChange={this.onChange}
-             />
-            {/* setOptions={{
+          />
+          {/* setOptions={{
               enableBasicAutocompletion: false,
               enableLiveAutocompletion: false,
               enableSnippets: false,
