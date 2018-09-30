@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* eslint-disable import/no-commonjs, import/no-nodejs-modules */
 const path = require("path");
 const ExtractTextPlugin = require("mini-css-extract-plugin");
 
