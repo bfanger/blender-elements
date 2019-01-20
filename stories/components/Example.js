@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import AceEditor from "react-ace";
 import styled from "styled-components";
 import "brace/mode/html";
-import "brace/theme/chrome";
+import "brace/theme/xcode";
 
 const SplitView = styled.div`
   display: flex;
